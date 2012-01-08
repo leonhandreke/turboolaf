@@ -2,8 +2,8 @@
 
 import json
 import time
-import smtplib
 from decimal import Decimal
+import uuid
 
 INVOICE_WIDTH = 40
 
@@ -22,10 +22,23 @@ while True:
     if not product_code:
         break
     else:
-        try:
-            invoice[product_code]["quantity"] += 1
-        except:
-            print("No such product!")
+        if product_code[0] == '$':
+            special_id = str(uuid.uuid4())
+            invoice.update({
+                special_id: {}
+                })
+            invoice[special_id]['quantity'] = 1
+            try:
+                special_name = product_code[1:].split(' ')[1]
+            except IndexError:
+                special_name = "Sonderposten"
+            invoice[special_id]['name'] = special_name
+            invoice[special_id]['price'] = product_code[1:].split(' ')[0]
+        else:
+            try:
+                invoice[product_code]["quantity"] += 1
+            except:
+                print("No such product!")
 
 invoice_string = ""
 invoice_string += "*" * INVOICE_WIDTH + "\n"
