@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import json
+import time
+import smtplib
 
 INVOICE_WIDTH = 40
 
@@ -24,10 +26,11 @@ while True:
         except:
             print("No such product!")
 
-print("\n\n")
-print("*" * INVOICE_WIDTH)
-print("K1 Getränkeverkauf".center(INVOICE_WIDTH))
-print("*" * INVOICE_WIDTH + "\n")
+invoice_string = ""
+invoice_string += "*" * INVOICE_WIDTH + "\n"
+invoice_string +="K1 Getränkeverkauf".center(INVOICE_WIDTH) + "\n"
+invoice_string += time.strftime("%d %b %Y %H:%M:%S").center(INVOICE_WIDTH) + "\n"
+invoice_string += "*" * INVOICE_WIDTH + "\n\n"
 
 total_price = 0
 for code, product in invoice.items():
@@ -35,15 +38,16 @@ for code, product in invoice.items():
         billed_price = product["price"] * product["quantity"]
         total_price += billed_price
 
-        print(
-                product["name"].ljust(15) +
-                str(product["price"]).rjust(5) +
-                str(" x " + str(product["quantity"])).rjust(6) +
-                " = " +
+        billing_string = str(product["price"]).rjust(5) + \
+                str(" x " + str(product["quantity"])).rjust(6) + \
+                " = " + \
                 str(billed_price).rjust(6)
-                )
 
-print("-" * INVOICE_WIDTH)
-print("Total:" + str(total_price).rjust(INVOICE_WIDTH - 6))
-print("\n")
+        name_string = product["name"].ljust(INVOICE_WIDTH - len(billing_string))
+        invoice_string += name_string + billing_string + "\n"
+
+invoice_string += "-" * INVOICE_WIDTH + "\n"
+invoice_string += "Total:" + str(total_price).rjust(INVOICE_WIDTH - 6) + "\n"
+
+print(invoice_string);
 
