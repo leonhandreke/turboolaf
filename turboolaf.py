@@ -71,23 +71,9 @@ for code, product in invoice.items():
 invoice_string += "-" * INVOICE_WIDTH + "\n"
 invoice_string += "Total:" + str(total_price).rjust(INVOICE_WIDTH - 6) + "\n"
 
-invoice_file = open("invoices/" + invoice_id + ".txt", 'w')
-invoice_file.write(invoice_string)
+invoice_file = open("invoices/" + invoice_id + ".json", 'w')
+invoice_file.write(json.dumps(invoice, indent=4))
 invoice_file.close()
 
 print(invoice_string);
-
-qif_string = '''
-!Type:Cash
-'''
-
-qif_string += 'T{0}\n'.format(total_price)
-qif_string += 'D{0}\n'.format(datetime.date.today().strftime("%m/%d' %y"))
-qif_string += 'MBierminister Verkauf\n'
-qif_string += '^\n'
-
-qif_file = open("invoices/" + invoice_id + ".qif", 'w')
-qif_file.write(qif_string)
-qif_file.close()
-
 
