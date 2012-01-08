@@ -3,6 +3,7 @@
 import json
 import time
 import smtplib
+from decimal import Decimal
 
 INVOICE_WIDTH = 40
 
@@ -32,10 +33,11 @@ invoice_string +="K1 Getränkeverkauf".center(INVOICE_WIDTH) + "\n"
 invoice_string += time.strftime("%d %b %Y %H:%M:%S").center(INVOICE_WIDTH) + "\n"
 invoice_string += "*" * INVOICE_WIDTH + "\n\n"
 
-total_price = 0
+# use decimal to guarantee total accuracy
+total_price = Decimal(0)
 for code, product in invoice.items():
     if product["quantity"] > 0:
-        billed_price = product["price"] * product["quantity"]
+        billed_price = Decimal(str(product["price"])) * Decimal(str(product["quantity"]))
         total_price += billed_price
 
         billing_string = str(product["price"]).rjust(5) + \
