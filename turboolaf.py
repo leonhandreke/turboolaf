@@ -10,6 +10,10 @@ INVOICE_WIDTH = 40
 print("Welcome to TurboOlaf!")
 
 invoice = json.load(open("invoice.json"))
+
+#TODO: Maybe make this unique...?
+invoice_id = str(int(time.time()))
+
 # set the quantity of all products to 0
 print(invoice)
 for code, product in invoice.items():
@@ -42,8 +46,9 @@ while True:
 
 invoice_string = ""
 invoice_string += "*" * INVOICE_WIDTH + "\n"
-invoice_string +="K1 Getränkeverkauf".center(INVOICE_WIDTH) + "\n"
+invoice_string += "K1 Getränkeverkauf".center(INVOICE_WIDTH) + "\n"
 invoice_string += time.strftime("%d %b %Y %H:%M:%S").center(INVOICE_WIDTH) + "\n"
+invoice_string += ("ID: " + invoice_id).center(INVOICE_WIDTH) + "\n"
 invoice_string += "*" * INVOICE_WIDTH + "\n\n"
 
 # use decimal to guarantee total accuracy
@@ -63,6 +68,10 @@ for code, product in invoice.items():
 
 invoice_string += "-" * INVOICE_WIDTH + "\n"
 invoice_string += "Total:" + str(total_price).rjust(INVOICE_WIDTH - 6) + "\n"
+
+invoice_file = open("invoices/" + invoice_id + ".txt", 'w')
+invoice_file.write(invoice_string)
+invoice_file.close()
 
 print(invoice_string);
 
