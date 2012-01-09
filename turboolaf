@@ -4,6 +4,7 @@ import json
 import time
 import datetime
 import optparse
+import math
 
 from decimal import Decimal
 import uuid
@@ -38,6 +39,10 @@ while True:
     if not product_code:
         break
     else:
+        amound = input("Menge(default 1):")
+        if amound == "":
+           amound = str(1)
+
         if product_code[0] == '$':
             special_id = str(uuid.uuid4())
             invoice.update({
@@ -50,9 +55,16 @@ while True:
                 special_name = "Sonderposten"
             invoice[special_id]['name'] = special_name
             invoice[special_id]['price'] = product_code[1:].split(' ')[0]
+        elif amound[0] == '$':
+            amound = amound.replace("$","")
+
+            try:
+                invoice[product_code]["quantity"] += float(Decimal(amound) / Decimal(invoice[str(invoice[product_code]["refund"])]["amound"]))
+            except:
+                print("No such product!")
         else:
             try:
-                invoice[product_code]["quantity"] += 1
+                invoice[product_code]["quantity"] += float(amound)
             except:
                 print("No such product!")
 
@@ -64,16 +76,21 @@ invoice_string += ("ID: " + invoice_id).center(INVOICE_WIDTH) + "\n"
 invoice_string += "*" * INVOICE_WIDTH + "\n\n"
 
 # use decimal to guarantee total accuracy
-total_price = Decimal(0)
+total_price = 0
 for code, product in invoice.items():
     if product["quantity"] > 0:
-        billed_price = Decimal(str(product["price"])) * Decimal(str(product["quantity"]))
-        total_price += billed_price
+        billed_price = math.ceil(float(Decimal(str(product["price"])) * Decimal(str(product["quantity"]))) / 0.01) * 0.01
+        refund_price = Decimal(str(invoice[str(product["refund"])]["price"])) * Decimal(str(product["quantity"])) 
+        if Decimal(str(product["quantity"])) % 2 == 0:
+           refund_price += Decimal(str(invoice["9900"]["price"])) * Decimal(str(product["quantity"]))
+        
+        total_price += billed_price + float(refund_price)
 
         billing_string = str(product["price"]).rjust(5) + \
-                str(" x " + str(product["quantity"])).rjust(6) + \
+                str(Decimal(str(invoice["9900"]["price"])) + Decimal(str(invoice[str(product["refund"])]["price"]))).rjust(6) + \
+                str(" x " + str(math.ceil(float(product["quantity"]) / 0.01) * 0.01)).rjust(7) + \
                 " = " + \
-                str(billed_price).rjust(6)
+                str(billed_price + float(refund_price)).rjust(7)
 
         name_string = product["name"].ljust(INVOICE_WIDTH - len(billing_string))
         invoice_string += name_string + billing_string + "\n"
@@ -82,7 +99,7 @@ invoice_string += "-" * INVOICE_WIDTH + "\n"
 invoice_string += "Total:" + str(total_price).rjust(INVOICE_WIDTH - 6) + "\n"
 
 invoice_file = open("invoices/" + invoice_id + ".json", 'w')
-invoice_file.write(json.dumps(invoice, indent=4))
+invoice_file.write(json.dumps(invoice, indent=5))
 invoice_file.close()
 
 print(invoice_string);
