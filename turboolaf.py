@@ -7,7 +7,7 @@ import datetime
 from decimal import Decimal
 import uuid
 
-INVOICE_WIDTH = 40
+INVOICE_WIDTH = 60
 
 print("Welcome to TurboOlaf!")
 
