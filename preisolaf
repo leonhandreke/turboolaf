@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import json
+import time
+import operator
+
+INVOICE_WIDTH = 60
+
+invoice = json.load(open("invoice_prototype.olaf"))
+
+invoice_string = ""
+invoice_string += "*" * INVOICE_WIDTH + "\n"
+invoice_string += "K1 Getränkeverkauf".center(INVOICE_WIDTH) + "\n"
+invoice_string += time.strftime("%d %b %Y %H:%M:%S").center(INVOICE_WIDTH) + "\n"
+invoice_string += ("Preisliste").center(INVOICE_WIDTH) + "\n"
+invoice_string += "*" * INVOICE_WIDTH + "\n\n"
+
+
+for code, product in invoice.items():
+   billing_string = str('%.2f' % product["price"]).rjust(5)
+
+   name_string = product["name"].ljust(INVOICE_WIDTH - len(billing_string))
+   
+   invoice_string += name_string + billing_string + "\n"
+
+print(invoice_string)
