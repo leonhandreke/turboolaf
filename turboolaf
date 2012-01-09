@@ -9,6 +9,8 @@ import math
 from decimal import Decimal
 import uuid
 
+import finanzolaf
+
 INVOICE_WIDTH = 60
 
 # add a --file argument and parse the arguments
@@ -98,9 +100,14 @@ for code, product in invoice.items():
 invoice_string += "-" * INVOICE_WIDTH + "\n"
 invoice_string += "Total:" + str(total_price).rjust(INVOICE_WIDTH - 6) + "\n"
 
+# TODO: write this out in a sorted manner e.g. yyyy/mm/dd/id.olaf
 invoice_file = open("invoices/" + invoice_id + ".json", 'w')
 invoice_file.write(json.dumps(invoice, indent=5))
 invoice_file.close()
+
+qif_file = open("qif/" + invoice_id + ".qif", 'w')
+qif_file.write(finanzolaf.get_qif(invoice))
+qif_file.close()
 
 print(invoice_string);
 
