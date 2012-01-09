@@ -17,6 +17,9 @@ invoice_string += "*" * INVOICE_WIDTH + "\n\n"
 
 
 for code, product in invoice.items():
+   if not product["name"].find("Pfand") == -1:
+       continue
+
    billing_string = str('%.2f' % product["price"]).rjust(5)
 
    name_string = product["name"].ljust(INVOICE_WIDTH - len(billing_string))
