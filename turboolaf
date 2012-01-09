@@ -61,6 +61,7 @@ while True:
             amound = amound.replace("$","")
 
             try:
+                #divide the amound of a box with the number of bought bottles and add the result to quantity
                 invoice[product_code]["quantity"] += float(Decimal(amound) / Decimal(invoice[str(invoice[product_code]["refund"])]["amound"]))
             except:
                 print("No such product!")
@@ -81,8 +82,13 @@ invoice_string += "*" * INVOICE_WIDTH + "\n\n"
 total_price = 0
 for code, product in invoice.items():
     if product["quantity"] > 0:
+        #multiply the box price with the quantity and round up to 1/100
         billed_price = math.ceil(float(Decimal(str(product["price"])) * Decimal(str(product["quantity"]))) / 0.01) * 0.01
+        
+        #multiply the number of the the bottles with the quantity
         refund_price = Decimal(str(invoice[str(product["refund"])]["price"])) * Decimal(str(product["quantity"])) 
+        
+        #add the anound of a box if there is a full box
         if Decimal(str(product["quantity"])) % 2 == 0:
            refund_price += Decimal(str(invoice["9900"]["price"])) * Decimal(str(product["quantity"]))
         
