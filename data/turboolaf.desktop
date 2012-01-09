@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=turboolaf
+GenericName=Invoice Generator
+Exec=turboolaf --file %U
+Terminal=true
+Type=Application
+MimeType=text/olaf-invoice;

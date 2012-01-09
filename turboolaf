@@ -3,15 +3,25 @@
 import json
 import time
 import datetime
+import optparse
 
 from decimal import Decimal
 import uuid
 
-INVOICE_WIDTH = 40
+INVOICE_WIDTH = 60
+
+# add a --file argument and parse the arguments
+parser = optparse.OptionParser()
+parser.add_option("-f", "--file", dest = "filename", help = "load invoice from SOURCE", metavar = "SOURCE")
+(options, args) = parser.parse_args()
+
+# load an invoice from file or, if no file was given, use the default invoice prototype
+if options.filename:
+    invoice = json.load(open(options.filename))
+else:
+    invoice = json.load(open("invoice_prototype.json"))
 
 print("Welcome to TurboOlaf!")
-
-invoice = json.load(open("invoice.json"))
 
 #TODO: Maybe make this unique...?
 invoice_id = str(int(time.time()))
