@@ -19,7 +19,7 @@ parser.add_option("-f", "--file", dest = "filename", help = "load invoice from S
 if options.filename:
     invoice = json.load(open(options.filename))
 else:
-    invoice = json.load(open("invoice_prototype.json"))
+    invoice = json.load(open("invoice_prototype.olaf"))
 
 print("Welcome to TurboOlaf!")
 
