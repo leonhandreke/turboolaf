@@ -13,6 +13,33 @@ import finanzolaf
 
 INVOICE_WIDTH = 60
 
+def refund_collection(invoice):
+   while True:
+      refund = input("Enter Marke(Pfand):")
+
+      if not refund:
+         break
+      else:
+         input("Anzahl:")
+
+         if refund[0] == '$':
+            refund = refund.replace("$","")
+
+            try:
+               invoice[str(invoice[refund]["refund"])]['quantity'] -= float(Decimal(refund) / Decimal(invoice[str(invoice[refund]["refund"])]["amound"]))
+            except:
+               print("No such product!")
+         else:
+            try:
+               invoice[str(invoice[refund]["refund"])]['quantity'] -= float(refund)
+            except:
+               print("No such product!")
+
+            if Decimal(refund) % 2 == 0:
+               invoice["9900"]['quantity'] -= float(refund)
+
+   return invoice
+
 # add a --file argument and parse the arguments
 parser = optparse.OptionParser()
 parser.add_option("-f", "--file", dest = "filename", help = "load invoice from SOURCE", metavar = "SOURCE")
@@ -30,9 +57,10 @@ print("Welcome to TurboOlaf!")
 invoice_id = str(int(time.time()))
 
 # set the quantity of all products to 0
-print(invoice)
 for code, product in invoice.items():
     product["quantity"] = 0
+
+invoice = refund_collection(invoice)
 
 while True:
     product_code = input("Product code:")
@@ -81,21 +109,29 @@ invoice_string += "*" * INVOICE_WIDTH + "\n\n"
 # use decimal to guarantee total accuracy
 total_price = 0
 for code, product in invoice.items():
-    if product["quantity"] > 0:
+    if product["quantity"] != 0:
         #multiply the box price with the quantity and round up to 1/100
         billed_price = math.ceil(float(Decimal(str(product["price"])) * Decimal(str(product["quantity"]))) / 0.01) * 0.01
         
         #multiply the number of the the bottles with the quantity
-        refund_price = Decimal(str(invoice[str(product["refund"])]["price"])) * Decimal(str(product["quantity"])) 
-        
+        try:
+           refund_price = Decimal(str(invoice[str(product["refund"])]["price"])) * Decimal(str(product["quantity"])) 
+        except:
+           refund_price = 0
+
         #add the anound of a box if there is a full box
         if Decimal(str(product["quantity"])) % 2 == 0:
            refund_price += Decimal(str(invoice["9900"]["price"])) * Decimal(str(product["quantity"]))
         
         total_price += billed_price + float(refund_price)
 
+        try:
+           refund = Decimal(str(invoice["9900"]["price"])) + Double(str(invoice[str(product["refund"])]["price"]))
+        except:
+           refund = ""
+
         billing_string = str(product["price"]).rjust(5) + \
-                str(Decimal(str(invoice["9900"]["price"])) + Decimal(str(invoice[str(product["refund"])]["price"]))).rjust(6) + \
+                str(refund).rjust(6) + \
                 str(" x " + str(math.ceil(float(product["quantity"]) / 0.01) * 0.01)).rjust(7) + \
                 " = " + \
                 str(billed_price + float(refund_price)).rjust(7)
