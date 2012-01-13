@@ -4,11 +4,14 @@ import json
 import time
 import datetime
 import optparse
+import os
 
 from decimal import Decimal
 import uuid
 
-INVOICE_WIDTH = 60
+def resolve_invoice_dependencies(invoice):
+    # TODO: be filled by xhochy
+    return invoice
 
 def get_total_price(invoice):
     total_price = Decimal(0)
@@ -24,6 +27,42 @@ def get_qif(invoice):
     qif += "MBierminister Verkauf\n"
     qif += "^"
     return qif
+
+def get_invoice_ascii(invoice, width=60):
+    invoice_string = ""
+    invoice_string += "*" * width + "\n"
+    invoice_string += "K1 Getränkeverkauf".center(width) + "\n"
+    invoice_string += time.strftime("%d %b %Y %H:%M:%S").center(width) + "\n"
+    invoice_string += ("ID: " + invoice_id).center(width) + "\n"
+    invoice_string += "*" * width + "\n\n"
+
+    # use decimal to guarantee total accuracy
+    total_price = Decimal(0)
+    for code, product in invoice.items():
+        if product["quantity"] > 0:
+            billed_price = Decimal(str(product["price"])) * Decimal(str(product["quantity"]))
+            total_price += billed_price
+
+            billing_string = str(product["price"]).rjust(5) + \
+                    str(" x " + str(product["quantity"])).rjust(6) + \
+                    " = " + \
+                    str(billed_price).rjust(6)
+
+            name_string = product["name"].ljust(width - len(billing_string))
+            invoice_string += name_string + billing_string + "\n"
+
+    invoice_string += "-" * width + "\n"
+    invoice_string += "Total:" + str(total_price).rjust(width - 6) + "\n"
+
+    return invoice_string
+
+def get_entered_items_ascii(invoice):
+    entered_items_string = ""
+    for code, product in invoice.items():
+        if product["quantity"] != 0:
+            entered_items_string += str(product["quantity"]).rjust(4) + " x " + product["name"] + "\n"
+    entered_items_string += "Total: " + str(get_total_price(invoice))
+    return entered_items_string
 
 # add a --file argument and parse the arguments
 parser = optparse.OptionParser()
@@ -70,31 +109,9 @@ while True:
                 invoice[product_code]["quantity"] += 1
             except:
                 print("No such product!")
+        # finally, print a list of all scanned items
+        print(get_entered_items_ascii(invoice))
 
-invoice_string = ""
-invoice_string += "*" * INVOICE_WIDTH + "\n"
-invoice_string += "K1 Getränkeverkauf".center(INVOICE_WIDTH) + "\n"
-invoice_string += time.strftime("%d %b %Y %H:%M:%S").center(INVOICE_WIDTH) + "\n"
-invoice_string += ("ID: " + invoice_id).center(INVOICE_WIDTH) + "\n"
-invoice_string += "*" * INVOICE_WIDTH + "\n\n"
-
-# use decimal to guarantee total accuracy
-total_price = Decimal(0)
-for code, product in invoice.items():
-    if product["quantity"] > 0:
-        billed_price = Decimal(str(product["price"])) * Decimal(str(product["quantity"]))
-        total_price += billed_price
-
-        billing_string = str(product["price"]).rjust(5) + \
-                str(" x " + str(product["quantity"])).rjust(6) + \
-                " = " + \
-                str(billed_price).rjust(6)
-
-        name_string = product["name"].ljust(INVOICE_WIDTH - len(billing_string))
-        invoice_string += name_string + billing_string + "\n"
-
-invoice_string += "-" * INVOICE_WIDTH + "\n"
-invoice_string += "Total:" + str(total_price).rjust(INVOICE_WIDTH - 6) + "\n"
 
 # TODO: write this out in a sorted manner e.g. yyyy/mm/dd/id.olaf
 invoice_file = open("invoices/" + invoice_id + ".json", 'w')
