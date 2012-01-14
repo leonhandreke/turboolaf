@@ -5,6 +5,7 @@ import time
 import datetime
 import optparse
 import os
+import string
 
 from decimal import Decimal
 import uuid
@@ -36,13 +37,9 @@ def get_invoice_ascii(invoice, width=60):
     invoice_string += ("ID: " + invoice_id).center(width) + "\n"
     invoice_string += "*" * width + "\n\n"
 
-    # use decimal to guarantee total accuracy
-    total_price = Decimal(0)
     for code, product in invoice.items():
         if product["quantity"] > 0:
             billed_price = Decimal(str(product["price"])) * Decimal(str(product["quantity"]))
-            total_price += billed_price
-
             billing_string = str(product["price"]).rjust(5) + \
                     str(" x " + str(product["quantity"])).rjust(6) + \
                     " = " + \
@@ -52,7 +49,7 @@ def get_invoice_ascii(invoice, width=60):
             invoice_string += name_string + billing_string + "\n"
 
     invoice_string += "-" * width + "\n"
-    invoice_string += "Total:" + str(total_price).rjust(width - 6) + "\n"
+    invoice_string += "Total:" + str(get_total_price(invoice)).rjust(width - 6) + "\n"
 
     return invoice_string
 
@@ -85,33 +82,72 @@ print(invoice)
 for code, product in invoice.items():
     product["quantity"] = 0
 
+previous_product_code = None
 while True:
-    product_code = input("Product code:")
+    entered = input("olaf > ")
+    # clear immediately and then show the input again
+    os.system("clear")
+    print("olaf > " + entered)
 
-    # end if an empty product code was given
-    if not product_code:
+    # end if an input was given
+    if not entered:
         break
     else:
-        if product_code[0] == '$':
-            special_id = str(uuid.uuid4())
-            invoice.update({
-                special_id: {}
-                })
-            invoice[special_id]['quantity'] = 1
+        if entered[0] == '$':
+            # the input is a Sonderposten
             try:
-                special_name = product_code[1:].split(' ')[1]
-            except IndexError:
-                special_name = "Sonderposten"
-            invoice[special_id]['name'] = special_name
-            invoice[special_id]['price'] = product_code[1:].split(' ')[0]
-        else:
-            try:
-                invoice[product_code]["quantity"] += 1
+                special_product = {}
+                special_id = str(uuid.uuid4())
+                invoice[special_id]['quantity'] = 1
+                try:
+                    special_name = entered[1:].split(' ')[1]
+                except IndexError:
+                    special_name = "Sonderposten"
+                special_product['name'] = special_name
+                special_product['price'] = Decimal(entered[1:].split(' ')[0])
+                previous_product_code = special_id
+                # only if nothing of the above failed, write the above
+                invoice.update({
+                    special_id: special_product
+                    })
             except:
-                print("No such product!")
+                print("Invalid Sonderposten format!")
+        else:
+            # the input is not a Sonderposten
+            if entered[0] in string.ascii_letters:
+                # the input starts with a letter and will be followed by a product id
+                previous_product_code = None
+                for code, product in invoice.items():
+                    if code == entered[1:]:
+                        previous_product_code = code
+                        print("Entered " + invoice[code]["name"])
+                        product["quantity"] += 1
+                if not previous_product_code:
+                    print("Invalid product code " + entered[1:] + " entered")
+            else:
+                if len(entered) > 10:
+                    # a code was scanned
+                    for code, product in invoice.items():
+                        if code == entered:
+                            previous_product_code = code
+                            print("Scanned " + invoice[code]["name"])
+                            product["quantity"] += 1
+                else:
+                    # a quantity was entered
+                    if previous_product_code:
+                        try:
+                            invoice[previous_product_code]["quantity"] += int(entered) - 1
+                            print("Added another " + str(int(entered) - 1) + " " + invoice[previous_product_code]["name"])
+                            previous_product_code = None
+                        except ValueError:
+                            print("No valid quantity entered")
+                    else:
+                        print("No previous product entered!")
+
         # finally, print a list of all scanned items
         print(get_entered_items_ascii(invoice))
 
+print(get_invoice_ascii(invoice))
 
 # TODO: write this out in a sorted manner e.g. yyyy/mm/dd/id.olaf
 invoice_file = open("invoices/" + invoice_id + ".json", 'w')
@@ -121,6 +157,3 @@ invoice_file.close()
 qif_file = open("qif/" + invoice_id + ".qif", 'w')
 qif_file.write(get_qif(invoice))
 qif_file.close()
-
-print(invoice_string);
-
