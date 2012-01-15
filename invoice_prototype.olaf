@@ -7,11 +7,11 @@
         "name": "Standard Plastikkasten",
         "price": 1.5
     },
-    "flasche_bier_03": {
-        "name": "Glasflasche 0,3l",
+    "flasche_bier": {
+        "name": "Bierflasche",
         "price": 0.08,
         "alias": [
-          "fb03"
+            "fb03"
         ]
     },
     "kasten_bier_mit_24_03": {
@@ -21,8 +21,68 @@
                 "id": "kasten_standard"
             },
             {
-                "id": "flasche_bier_03",
+                "id": "flasche_bier",
                 "quantity": 24
+            }
+        ]
+    },
+    "kasten_bier_mit_20_05": {
+        "name": "Bierkasten 24x0,5l",
+        "dependencies": [
+            {
+                "id": "kasten_standard"
+            },
+            {
+                "id": "flasche_bier",
+                "quantity": 20
+            }
+        ]
+    },
+    "kasten_cola_10_15": {
+        "name": "Cola-Kasten 10x1,5l",
+        "dependencies": [
+            {
+                "id": "kasten_standard"
+            },
+            {
+                "id": "flasche_cola",
+                "quantity": 10
+            }
+        ]
+    },
+    "kasten_cola_12_10": {
+        "name": "Cola-Kasten 12x1l",
+        "dependencies": [
+            {
+                "id": "kasten_standard"
+            },
+            {
+                "id": "flasche_cola",
+                "quantity": 12
+            }
+        ]
+    },
+    "kasten_saft": {
+        "name": "Saftkasten 6x1l",
+        "dependencies": [
+            {
+                "id": "kasten_standard"
+            },
+            {
+                "id": "flasche_saft",
+                "quantity": 6
+            }
+        ]
+    },
+    "kasten_sprudel": {
+        "name": "Sprudelkasten 12x0,7l",
+        "dependencies": [
+            {
+                "id": "kasten_standard"
+            },
+            {
+                "id": "flasche_sprudel",
+                "quantity": 12
             }
         ]
     },
@@ -42,6 +102,9 @@
             {
                 "id": "kasten_bier_mit_24_03"
             }
+        ],
+        "alias": [
+            "zaepfle"
         ]
     },
     "kasten_becks": {
@@ -103,7 +166,7 @@
         "price": 11.5,
         "dependencies": [
             {
-                "id": "kasten_cola_10_10"
+                "id": "kasten_cola_12_10"
             }
         ]
     },
@@ -112,7 +175,7 @@
         "price": 11.5,
         "dependencies": [
             {
-                "id": "kasten_cola_10_10"
+                "id": "kasten_cola_12_10"
             }
         ]
     },
@@ -268,5 +331,21 @@
                 "id": "kasten_bier_mit_24_03"
             }
         ]
+    },
+    "flasche_cola": {
+        "name": "Colaflasche",
+        "price": 0.15
+    },
+    "flasche_sprudel": {
+        "name": "Sprudelflasche 0,7l",
+        "price": 0.08
+    },
+    "flasche_saft": {
+        "name": "Saftflasche 1l",
+        "price": 0.15
+    },
+    "fass": {
+        "name": "Fasspfand",
+        "price": 30
     }
 }
