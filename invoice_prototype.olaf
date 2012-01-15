@@ -1,143 +1,272 @@
 {
-  "1": {
-    "name": "Becks 24/0,3",
-    "price": 15.50
-  },
-  "2": {
-    "name": "Hoepfner Grape 24/0.3",
-    "price": 15.50
-  },
-  "3": {
-    "name": "Hoepfner Grape Active 24/0.3",
-    "price": 15.50
-  },
-  "4": {
-    "name": "Hoepfner Kräusen 20/0.5",
-    "price": 15
-  },
-  "5": {
-    "name": "Maisel Weizen 20/0.5",
-    "price": 15
-  },
-  "6": {
-    "name": "Tannenzäpfle24/0.3",
-    "price": 13.50
-  },
-  "7": {
-    "name": "Rothaus Pils 30l",
-    "price": 52.00
-  },
-  "8": {
-    "name": "Coca-Cola 10/1.5",
-    "price": 13.00
-  },
-  "9": {
-    "name": "Coca-Cola 12/1",
-    "price": 11.50
-  },
-  "10": {
-    "name": "Fanta Orange 10/1",
-    "price": 13.0
-  },
-  "11": {
-    "name": "Kumpf Apfel Direkt",
-    "price": 1.34
-  },
-  "12": {
-    "name": "Kumpf Multi",
-    "price": 1.63
-  },
-  "13": {
-    "name": "Kumpf Orange Gold",
-    "price": 1.5
-  },
-  "14": {
-    "name": "Kumpf Orange PET",
-    "price": 1.34
-  },
-  "15": {
-    "name": "Neus Apfel",
-    "price": 1.17
-  },
-  "16": {
-    "name": "Neus Multi",
-    "price": 1.5
-  },
-  "17": {
-    "name": "Neus Orange",
-    "price": 1.67
-  },
-  "18": {
-    "name": "Neus Kirsche",
-    "price": 1.84
-  },
-  "19": {
-    "name": "Granini Ananas",
-    "price": 2.25
-  },
-  "20": {
-    "name": "Granini Banane",
-    "price": 1.91
-  },
-  "21": {
-    "name": "Granini Kirsche",
-    "price": 2.34
-  },
-  "22": {
-    "name": "Granini Maracuja",
-    "price": 2.24
-  },
-  "23": {
-    "name": "Wiesentahler Sprudel (blau)",
-    "price": 3.50
-  },
-  "24": {
-    "name": "Wiesentahler Sprudel (grün)",
-    "price": 3.50
-  },
-  "25": {
-    "name": "Wiesentahler Zitronensprudel",
-    "price": 4.80
-  },
-  "26": {
-    "name": "Wiesentahler Orange",
-    "price": 4.80
-  },
-  "27": {
-    "name": "Wiesentahler Grapefruitlimo",
-    "price": 6.00
-  },
-  "28": {
-    "name": "Wiesentahler Apfelschorle",
-    "price": 6.20
-  },
-  "29": {
-    "name": "Wiesentahler ColaMix",
-    "price": 5.50
-  },
-  "30": {
-    "name": "Apfel alt",
-    "price": 4.70
-  },
-  "31": {
-    "name": "Orangen alt",
-    "price": 6.50
-  },
-  "32": {
-    "name": "Waldhaus o.Filter",
-    "price": 16
-  },
-  "9901": {
-    "name": "Pfand Kasten",
-    "price": 1.5
-  },
-  "9902": {
-    "name": "Pfand Bierflasche",
-    "price": 0.08
-  },
-  "9903": {
-    "name": "Pfand Sprudel/Cola/Saft",
-    "price": 0.15
-  }
- 
+    "kasten_standard": {
+        "alias": [
+            "ka",
+            "213413241234"
+        ],
+        "name": "Standard Plastikkasten",
+        "price": 1.5
+    },
+    "flasche_bier_03": {
+        "name": "Glasflasche 0,3l",
+        "price": 0.08,
+        "alias": [
+          "fb03"
+        ]
+    },
+    "kasten_bier_mit_24_03": {
+        "name": "Bierkasten mit 24 0,3l Flaschen",
+        "dependencies": [
+            {
+                "id": "kasten_standard"
+            },
+            {
+                "id": "flasche_bier_03",
+                "quantity": 24
+            }
+        ]
+    },
+    "kasten_bier_mit_24_03_pfandrueckgabe": {
+        "name": "Pfandrückgabe Bierkasten mit 24 0,3l Flaschen",
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_24_03",
+                "quantity": -1
+            }
+        ]
+    },
+    "kasten_zaepfle": {
+        "name": "Rothaus Tannenzäpfle (24x0,3l)",
+        "price": 15.5,
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_24_03"
+            }
+        ]
+    },
+    "kasten_becks": {
+        "name": "Becks (24x0,3l)",
+        "price": 15.5,
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_24_03"
+            }
+        ]
+    },
+    "kasten_grape": {
+        "name": "Hoepfner Grape (24x0,3l)",
+        "price": 15.5,
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_24_03"
+            }
+        ]
+    },
+    "kasten_kraeusen": {
+        "name": "Hoepfner Kräusen (20x0,5l)",
+        "price": 15,
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_20_05"
+            }
+        ]
+    },
+    "kasten_maisels": {
+        "name": "Maisels Weizen (20x0,5l)",
+        "price": 15,
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_20_05"
+            }
+        ]
+    },
+    "fass_rothaus": {
+        "name": "Rothaus Pils 30l",
+        "price": 52,
+        "dependencies": [
+            {
+                "id": "fass"
+            }
+        ]
+    },
+    "kasten_cola_15": {
+        "name": "Coca-Cola (10x1,5l)",
+        "price": 13,
+        "dependencies": [
+            {
+                "id": "kasten_cola_10_15"
+            }
+        ]
+    },
+    "kasten_cola_10": {
+        "name": "Coca-Cola (12x1l)",
+        "price": 11.5,
+        "dependencies": [
+            {
+                "id": "kasten_cola_10_10"
+            }
+        ]
+    },
+    "kasten_Fanta_10": {
+        "name": "Fanta (12x1l)",
+        "price": 11.5,
+        "dependencies": [
+            {
+                "id": "kasten_cola_10_10"
+            }
+        ]
+    },
+    "kasten_kumpf_Apfel_direkt": {
+        "name": "Kumpf Apfel direkt (6x1l)",
+        "price": 8,
+        "dependencies": [
+            {
+                "id": "kasten_saft"
+            }
+        ]
+    },
+    "kasten_kumpf_multi": {
+        "name": "Kumpf Multivitamin (6x1l)",
+        "price": 9.75,
+        "dependencies": [
+            {
+                "id": "kasten_saft"
+            }
+        ]
+    },
+    "kasten_kumpf_orange": {
+        "name": "Kumpf Orangensaft (6x1l)",
+        "price": 9,
+        "dependencies": [
+            {
+                "id": "kasten_saft"
+            }
+        ]
+    },
+    "kasten_granini_ananas": {
+        "name": "Granini Annanassaft (6x1l)",
+        "price": 13.5,
+        "dependencies": [
+            {
+                "id": "kasten_saft"
+            }
+        ]
+    },
+    "kasten_granini_banane": {
+        "name": "Granini Bananennektar (6x1l)",
+        "price": 11.5,
+        "dependencies": [
+            {
+                "id": "kasten_saft"
+            }
+        ]
+    },
+    "kasten_granini_kirsche": {
+        "name": "Granini Kirschsaft (6x1l)",
+        "price": 14,
+        "dependencies": [
+            {
+                "id": "kasten_saft"
+            }
+        ]
+    },
+    "kasten_granini_maracuja": {
+        "name": "Granini Maracuja (6x1l)",
+        "price": 13.4,
+        "dependencies": [
+            {
+                "id": "kasten_saft"
+            }
+        ]
+    },
+    "kasten_wiesentahler_blau": {
+        "name": "Wiesentahler Sprudel(blau) (12x0,7l))",
+        "price": 3.4,
+        "dependencies": [
+            {
+                "id": "kasten_sprudel"
+            }
+        ]
+    },
+    "kasten_wiesentahler_gruen": {
+        "name": "Wiesentahler Sprudel(grün) (12x0,7l))",
+        "price": 3.4,
+        "dependencies": [
+            {
+                "id": "kasten_sprudel"
+            }
+        ]
+    },
+    "kasten_wiesentahler_zitrone": {
+        "name": "Wiesentahler Zitronenlimonade (12x0,7l))",
+        "price": 4.6,
+        "dependencies": [
+            {
+                "id": "kasten_sprudel"
+            }
+        ]
+    },
+    "kasten_wiesentahler_oragne": {
+        "name": "Wiesentahler Orangenlimonade (12x0,7l))",
+        "price": 4.6,
+        "dependencies": [
+            {
+                "id": "kasten_sprudel"
+            }
+        ]
+    },
+    "kasten_wiesentahler_grapefruit": {
+        "name": "Wiesentahler Grapefruidlimo (12x0,7l))",
+        "price": 5.7,
+        "dependencies": [
+            {
+                "id": "kasten_sprudel"
+            }
+        ]
+    },
+    "kasten_wiesentahler_apfelschorle": {
+        "name": "Wiesentahler Apfelschorle (12x0,7l))",
+        "price": 6.2,
+        "dependencies": [
+            {
+                "id": "kasten_sprudel"
+            }
+        ]
+    },
+    "kasten_wiesentahler_cola": {
+        "name": "Wiesentahler ColaMix (12x0,7l))",
+        "price": 5.3,
+        "dependencies": [
+            {
+                "id": "kasten_sprudel"
+            }
+        ]
+    },
+    "kasten_orange": {
+        "name": "Orangensaft (6x1l)",
+        "price": 6.5,
+        "dependencies": [
+            {
+                "id": "kasten_saft"
+            }
+        ]
+    },
+    "kasten_apfel": {
+        "name": "Apfelsaft (6x1l)",
+        "price": 4.7,
+        "dependencies": [
+            {
+                "id": "kasten_saft"
+            }
+        ]
+    },
+    "kasten_waldhaus": {
+        "name": "Waldhaus (24x0,3l)",
+        "price": 16,
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_24_03"
+            }
+        ]
+    }
 }
