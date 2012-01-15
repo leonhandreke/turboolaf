@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import copy
 import json
 import time
 import datetime
@@ -10,15 +11,50 @@ import string
 from decimal import Decimal
 import uuid
 
+
+# Check that there is no product anymore that depends on this product
+def product_dependencies_resolvable(invoice, code):
+    for c, product in invoice.items():
+        try:
+            for dep in product['dependencies']:
+                if dep["id"] == code:
+                    return False
+        except KeyError:
+            pass
+    return True
+
 def resolve_invoice_dependencies(invoice):
-    # TODO: be filled by xhochy
+    invoice = copy.deepcopy(invoice)
+    changes = 1
+    while changes > 0:
+        changes = 0
+        for code, product in invoice.items():
+            if not product_dependencies_resolvable(invoice, code):
+                continue
+            try:
+                dependencies = product["dependencies"]
+            except KeyError:
+                continue
+            for dependency in dependencies:
+                changes += 1
+                try:
+                    quantity = dependency['quantity']
+                except KeyError:
+                    quantity = 1
+                invoice[dependency['id']]['quantity'] += product['quantity'] * quantity
+            invoice[code]["dependencies"] = []
     return invoice
 
 def get_total_price(invoice):
+    invoice = resolve_invoice_dependencies(invoice)
     total_price = Decimal(0)
     for code, product in invoice.items():
-        billed_price = Decimal(str(product["price"])) * Decimal(str(product["quantity"]))
-        total_price += billed_price
+        try:
+            billed_price = Decimal(str(product["price"])) * Decimal(str(product["quantity"]))
+            total_price += billed_price
+        except KeyError:
+            # If the product has no price or quantity, ignore it
+            pass
     return total_price
 
 def get_qif(invoice):
@@ -39,8 +75,12 @@ def get_invoice_ascii(invoice, width=60):
 
     for code, product in invoice.items():
         if product["quantity"] > 0:
-            billed_price = Decimal(str(product["price"])) * Decimal(str(product["quantity"]))
-            billing_string = str(product["price"]).rjust(5) + \
+            try:
+                price = Decimal(str(product["price"]))
+            except KeyError:
+                price = Decimal(0)
+            billed_price = price * Decimal(str(product["quantity"]))
+            billing_string = str(price).rjust(5) + \
                     str(" x " + str(product["quantity"])).rjust(6) + \
                     " = " + \
                     str(billed_price).rjust(6)
@@ -61,6 +101,20 @@ def get_entered_items_ascii(invoice):
     entered_items_string += "Total: " + str(get_total_price(invoice))
     return entered_items_string
 
+def get_product_code(invoice, code):
+    try:
+        invoice[code]
+        return code
+    except KeyError:
+        pass
+    for codename, product in invoice.items():
+        try:
+            if code in product['alias']:
+                return codename
+        except KeyError:
+            pass
+    return None
+
 # add a --file argument and parse the arguments
 parser = optparse.OptionParser()
 parser.add_option("-f", "--file", dest = "filename", help = "load invoice from SOURCE", metavar = "SOURCE")
@@ -78,7 +132,7 @@ print("Welcome to TurboOlaf!")
 invoice_id = str(int(time.time()))
 
 # set the quantity of all products to 0
-print(invoice)
+#print(invoice)
 for code, product in invoice.items():
     product["quantity"] = 0
 
@@ -115,15 +169,14 @@ while True:
         else:
             # the input is not a Sonderposten
             if entered[0] in string.ascii_letters:
+                code = get_product_code(invoice, entered)
                 # the input starts with a letter and will be followed by a product id
-                previous_product_code = None
-                for code, product in invoice.items():
-                    if code == entered[1:]:
-                        previous_product_code = code
-                        print("Entered " + invoice[code]["name"])
-                        product["quantity"] += 1
-                if not previous_product_code:
+                if not code:
                     print("Invalid product code " + entered[1:] + " entered")
+                else:
+                    previous_product_code = code
+                    print("Entered " + invoice[code]["name"])
+                    invoice[code]["quantity"] += 1
             else:
                 if len(entered) > 10:
                     # a code was scanned
@@ -147,7 +200,9 @@ while True:
         # finally, print a list of all scanned items
         print(get_entered_items_ascii(invoice))
 
-print(get_invoice_ascii(invoice))
+#print(get_invoice_ascii(invoice))
+#print("################################")
+print(get_invoice_ascii(resolve_invoice_dependencies(invoice)))
 
 # TODO: write this out in a sorted manner e.g. yyyy/mm/dd/id.olaf
 invoice_file = open("invoices/" + invoice_id + ".json", 'w')
