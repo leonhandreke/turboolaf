@@ -28,6 +28,7 @@
     },
     "kasten_bier_mit_20_05": {
         "name": "Bierkasten 24x0,5l",
+        "alias": ["bierkasten24"],
         "dependencies": [
             {
                 "id": "kasten_standard"
@@ -119,6 +120,7 @@
     "kasten_grape": {
         "name": "Hoepfner Grape (24x0,3l)",
         "price": 15.5,
+        "alias": ["grape"],
         "dependencies": [
             {
                 "id": "kasten_bier_mit_24_03"
@@ -128,6 +130,7 @@
     "kasten_kraeusen": {
         "name": "Hoepfner Kräusen (20x0,5l)",
         "price": 15,
+        "alias": ["kraeusen"],
         "dependencies": [
             {
                 "id": "kasten_bier_mit_20_05"
