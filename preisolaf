@@ -20,7 +20,7 @@ for code, product in invoice.items():
     try:
         billing_string = str('%.2f' % product["price"]).rjust(5)
         name_string = product["name"].ljust(INVOICE_WIDTH - len(billing_string))
-        invoice_string += name_string + billing_string + "\n"
+        invoice_string += name_string + billing_string + " " + code +  " " + "\n"
     except KeyError:
         pass
 
