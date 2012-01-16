@@ -59,8 +59,8 @@ def get_invoice_ascii(invoice, width=60):
     invoice_string += "*" * width + "\n\n"
 
     for code, product in invoice.items():
-        if product["quantity"] > 0:
-            price = Decimal(str(product.get('price', 0)))
+        price = Decimal(str(product.get('price', 0)))
+        if product["quantity"] != 0 and price != 0:
             billed_price = price * Decimal(str(product["quantity"]))
             billing_string = str(price).rjust(5) + \
                     str(" x " + str(product["quantity"])).rjust(6) + \
