@@ -15,12 +15,9 @@ import uuid
 # Check that there is no product anymore that depends on this product
 def product_dependencies_resolvable(invoice, code):
     for c, product in invoice.items():
-        try:
-            for dep in product['dependencies']:
-                if dep["id"] == code:
-                    return False
-        except KeyError:
-            pass
+        for dep in product.get('dependencies', []):
+            if dep['id'] == code:
+                return False
     return True
 
 def resolve_invoice_dependencies(invoice):
@@ -31,17 +28,9 @@ def resolve_invoice_dependencies(invoice):
         for code, product in invoice.items():
             if not product_dependencies_resolvable(invoice, code):
                 continue
-            try:
-                dependencies = product["dependencies"]
-            except KeyError:
-                continue
-            for dependency in dependencies:
+            for dependency in product.get('dependencies', []):
                 changes += 1
-                try:
-                    quantity = dependency['quantity']
-                except KeyError:
-                    quantity = 1
-                invoice[dependency['id']]['quantity'] += product['quantity'] * quantity
+                invoice[dependency['id']]['quantity'] += product['quantity'] * dependency.get('quantity', 1)
             invoice[code]["dependencies"] = []
     return invoice
 
@@ -49,12 +38,8 @@ def get_total_price(invoice):
     invoice = resolve_invoice_dependencies(invoice)
     total_price = Decimal(0)
     for code, product in invoice.items():
-        try:
-            billed_price = Decimal(str(product["price"])) * Decimal(str(product["quantity"]))
-            total_price += billed_price
-        except KeyError:
-            # If the product has no price or quantity, ignore it
-            pass
+        billed_price = Decimal(str(product.get('price', 0))) * Decimal(str(product.get('quantity')))
+        total_price += billed_price
     return total_price
 
 def get_qif(invoice):
@@ -75,10 +60,7 @@ def get_invoice_ascii(invoice, width=60):
 
     for code, product in invoice.items():
         if product["quantity"] > 0:
-            try:
-                price = Decimal(str(product["price"]))
-            except KeyError:
-                price = Decimal(0)
+            price = Decimal(str(product.get('price', 0)))
             billed_price = price * Decimal(str(product["quantity"]))
             billing_string = str(price).rjust(5) + \
                     str(" x " + str(product["quantity"])).rjust(6) + \
@@ -108,11 +90,8 @@ def get_product_code(invoice, code):
     except KeyError:
         pass
     for codename, product in invoice.items():
-        try:
-            if code in product['alias']:
-                return codename
-        except KeyError:
-            pass
+        if code in product.get('alias', []):
+            return codename
     return None
 
 # add a --file argument and parse the arguments
@@ -200,8 +179,6 @@ while True:
         # finally, print a list of all scanned items
         print(get_entered_items_ascii(invoice))
 
-#print(get_invoice_ascii(invoice))
-#print("################################")
 print(get_invoice_ascii(resolve_invoice_dependencies(invoice)))
 
 # TODO: write this out in a sorted manner e.g. yyyy/mm/dd/id.olaf
