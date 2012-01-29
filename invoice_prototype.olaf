@@ -106,6 +106,16 @@
             }
         ]
     },
+    "kasten_waldhaus": {
+        "name": "Waldhaus (24x0,3l)",
+        "alias": ["waldhaus"],
+        "price": 16,
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_24_03"
+            }
+        ]
+    },
     "kasten_zaepfle": {
         "name": "Rothaus Tannenzäpfle (24x0,3l)",
         "alias": ["zaepfle", "zäpfle"],
