@@ -117,7 +117,10 @@ for code, product in invoice.items():
 
 previous_product_code = None
 while True:
-    entered = input("olaf > ")
+    try:
+        entered = input("olaf > ")
+    except EOFError:
+        break
     # clear immediately and then show the input again
     os.system("clear")
     print("olaf > " + entered)
