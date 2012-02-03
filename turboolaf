@@ -6,6 +6,7 @@ import time
 import datetime
 import optparse
 import os
+import sys
 import string
 
 from decimal import Decimal
@@ -121,6 +122,9 @@ while True:
         entered = input("olaf > ")
     except EOFError:
         break
+    except KeyboardInterrupt:
+        print("\nCaught SIGINT, exiting...\n")
+        sys.exit(1)
     # clear immediately and then show the input again
     os.system("clear")
     print("olaf > " + entered)
