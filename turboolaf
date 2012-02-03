@@ -157,7 +157,7 @@ while True:
                     print("Entered " + invoice[code]["name"])
                     invoice[code]["quantity"] += 1
             else:
-                if len(entered) > 10:
+                if len(entered) >= 8:
                     # a code was scanned
                     for code, product in invoice.items():
                         if code == entered:

@@ -106,6 +106,56 @@
             }
         ]
     },
+    "kasten_bier_mit_20_05_pfandrueckgabe": {
+        "name": "PfandrÃ¼ckgabe Bierkasten mit 22 0,5l Flaschen",
+        "alias": ["pfandbierkasten20", "p20"],
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_20_05",
+                "quantity": -1
+            }
+        ]
+    },
+    "kasten_sprudel_pfandrueckgabe": {
+        "name": "PfandrÃ¼ckgabe Sprudelkasten",
+        "alias": ["pfandsprudelkasten", "psp"],
+        "dependencies": [
+            {
+                "id": "kasten_sprudel",
+                "quantity": -1
+            }
+        ]
+    },
+    "kasten_cola_10_15_pfandrueckgabe": {
+        "name": "PfandrÃ¼ckgabe Cola (10x1,5l)",
+        "alias": ["pfandcola10", "pc10"],
+        "dependencies": [
+            {
+                "id": "kasten_cola_10_15",
+                "quantity": -1
+            }
+        ]
+    },
+    "kasten_cola_12_10_pfandrueckgabe": {
+        "name": "PfandrÃ¼ckgabe Cola (12x1l)",
+        "alias": ["pfandcola12", "pc12"],
+        "dependencies": [
+            {
+                "id": "kasten_cola_12_10",
+                "quantity": -1
+            }
+        ]
+    },
+    "kasten_saft_pfandrueckgabe": {
+        "name": "PfandrÃ¼ckgabe Saftkasten",
+        "alias": ["pfandsaftkasten", "psa"],
+        "dependencies": [
+            {
+                "id": "kasten_saft",
+                "quantity": -1
+            }
+        ]
+    },
     "kasten_waldhaus": {
         "name": "Waldhaus (24x0,3l)",
         "alias": ["waldhaus"],
@@ -185,7 +235,7 @@
             }
         ]
     },
-    "kasten_cola_12": {
+    "5449000017888": {
         "name": "Coca-Cola (12x1l)",
         "alias": ["cola12"],
         "price": 11.5,
@@ -195,9 +245,9 @@
             }
         ]
     },
-    "kasten_Fanta_12": {
+    "5449000017918": {
         "name": "Fanta (12x1l)",
-        "alias": ["fanta", "fanta12"],
+        "alias": ["fanta", "fanta12", "5449000017918"],
         "price": 11.5,
         "dependencies": [
             {
@@ -275,7 +325,7 @@
             }
         ]
     },
-    "kasten_wiesentahler_blau": {
+    "4035903001096": {
         "name": "Wiesentahler Sprudel(blau) (12x0,7l))",
         "alias": ["sprudelblau"],
         "price": 3.4,
@@ -305,7 +355,7 @@
             }
         ]
     },
-    "kasten_wiesentahler_orange": {
+    "4035903004097": {
         "name": "Wiesentahler Orangenlimonade (12x0,7l))",
         "alias": ["olimo", "orangelimo", "orangenlimo", "orangenlimonade"],
         "price": 4.6,
@@ -315,7 +365,7 @@
             }
         ]
     },
-    "kasten_wiesentahler_grapefruit": {
+    "4035903011095": {
         "name": "Wiesentahler Grapefruidlimo (12x0,7l))",
         "alias": ["grapelimo", "grapefruitlimo", "grapefruitlimonade"],
         "price": 5.7,
@@ -335,7 +385,7 @@
             }
         ]
     },
-    "kasten_wiesentahler_cola": {
+    "4035903013099": {
         "name": "Wiesentahler ColaMix (12x0,7l))",
         "alias": ["colamix"],
         "price": 5.3,
