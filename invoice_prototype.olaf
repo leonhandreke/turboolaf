@@ -98,7 +98,7 @@
     },
     "kasten_bier_mit_24_03_pfandrueckgabe": {
         "name": "Pfandrückgabe Bierkasten mit 24 0,3l Flaschen",
-        "alias": ["pfandbierkasten24"],
+        "alias": ["pfandbierkasten24", "p24"],
         "dependencies": [
             {
                 "id": "kasten_bier_mit_24_03",
@@ -107,7 +107,7 @@
         ]
     },
     "kasten_bier_mit_20_05_pfandrueckgabe": {
-        "name": "PfandrÃ¼ckgabe Bierkasten mit 22 0,5l Flaschen",
+        "name": "Pfandrückgabe Bierkasten mit 22 0,5l Flaschen",
         "alias": ["pfandbierkasten20", "p20"],
         "dependencies": [
             {
@@ -168,7 +168,7 @@
     },
     "kasten_zaepfle": {
         "name": "Rothaus Tannenzäpfle (24x0,3l)",
-        "alias": ["zaepfle", "zäpfle"],
+        "alias": ["zaepfle", "zäpfle", "41051825"],
         "price": 13.5,
         "dependencies": [
             {
@@ -337,7 +337,7 @@
     },
     "kasten_wiesentahler_gruen": {
         "name": "Wiesentahler Sprudel(grün) (12x0,7l))",
-        "alias": ["sprudelgruen"],
+        "alias": ["sprudelgruen", "4035903002093"],
         "price": 3.4,
         "dependencies": [
             {
