@@ -1,2 +1,4 @@
 /qif/*.qif
 /invoices/*.json
+*.sw?
+*~
