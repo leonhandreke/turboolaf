@@ -156,7 +156,7 @@
             }
         ]
     },
-    "kasten_waldhaus": {
+    "4015345930000": {
         "name": "Waldhaus (24x0,3l)",
         "alias": ["waldhaus"],
         "price": 16,
@@ -176,7 +176,7 @@
             }
         ]
     },
-    "kasten_becks": {
+    "41001301": {
         "name": "Becks (24x0,3l)",
         "alias": ["becks"],
         "price": 15.5,
@@ -186,7 +186,7 @@
             }
         ]
     },
-    "kasten_grape": {
+    "4008109432308": {
         "name": "Hoepfner Grape (24x0,3l)",
         "price": 15.5,
         "alias": ["grape"],
@@ -216,6 +216,26 @@
             }
         ]
     },
+    "4002103000013": {
+        "name": "Erdinger Weizen hell (20x0,5l)",
+        "alias": ["erdingerhell"],
+        "price": 15.50,
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_20_05"
+            }
+        ]
+    },
+    "4002103000037": {
+        "name": "Erdinger Weizen dunkel (20x0,5l)",
+        "alias": ["erdingerdunkel"],
+        "price": 15.50,
+        "dependencies": [
+            {
+                "id": "kasten_bier_mit_20_05"
+            }
+        ]
+    },
     "fass_rothaus": {
         "name": "Rothaus Pils 30l",
         "price": 52,
@@ -225,7 +245,7 @@
             }
         ]
     },
-    "kasten_cola_10": {
+    "5449000050519": {
         "name": "Coca-Cola (10x1,5l)",
         "alias": ["cola10"],
         "price": 13,
@@ -295,7 +315,7 @@
             }
         ]
     },
-    "kasten_granini_banane": {
+    "4002160053120": {
         "name": "Granini Bananennektar (6x1l)",
         "alias": ["bananenkasten"],
         "price": 11.5,
@@ -315,7 +335,7 @@
             }
         ]
     },
-    "kasten_granini_maracuja": {
+    "4002160053182": {
         "name": "Granini Maracuja (6x1l)",
         "alias": ["maracujakasten"],
         "price": 13.4,
@@ -345,7 +365,7 @@
             }
         ]
     },
-    "kasten_wiesentahler_zitrone": {
+    "4035903008095": {
         "name": "Wiesentahler Zitronenlimonade (12x0,7l))",
         "alias": ["zitrolimo", "zitronenlimo", "zitronenlimonade"],
         "price": 4.6,
@@ -375,7 +395,7 @@
             }
         ]
     },
-    "kasten_wiesentahler_apfelschorle": {
+    "4035903006091": {
         "name": "Wiesentahler Apfelschorle (12x0,7l))",
         "alias": ["aschorle", "apfelschorle"],
         "price": 6.2,
@@ -395,7 +415,7 @@
             }
         ]
     },
-    "kasten_orange": {
+    "4021375003782": {
         "name": "Orangensaft (6x1l)",
         "alias": ["oldorange", "altorange"],
         "price": 6.5,
@@ -412,16 +432,6 @@
         "dependencies": [
             {
                 "id": "kasten_saft"
-            }
-        ]
-    },
-    "kasten_waldhaus": {
-        "name": "Waldhaus (24x0,3l)",
-        "alias": ["waldhaus"],
-        "price": 16,
-        "dependencies": [
-            {
-                "id": "kasten_bier_mit_24_03"
             }
         ]
     },
