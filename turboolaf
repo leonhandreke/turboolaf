@@ -166,11 +166,14 @@ while True:
             else:
                 if len(entered) >= 8:
                     # a code was scanned
-                    for code, product in invoice.items():
-                        if code == entered:
-                            previous_product_code = code
-                            print("Scanned " + invoice[code]["name"])
-                            product["quantity"] += 1
+                    code = get_product_code(invoice, entered)
+                    # the input starts with a letter and will be followed by a product id
+                    if not code:
+                        print("Invalid product code " + entered[1:] + " entered")
+                    else:
+                        previous_product_code = code
+                        print("Scanned " + invoice[code]["name"])
+                        product["quantity"] += 1
                 else:
                     # a quantity was entered
                     if previous_product_code:
