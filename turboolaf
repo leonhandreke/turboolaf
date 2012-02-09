@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 
+from decimal import Decimal
 import copy
-import json
-import time
 import datetime
+import json
 import optparse
 import os
-import sys
 import string
-
-from decimal import Decimal
+import sys
+import time
 import uuid
+
 
 
 # Check that there is no product anymore that depends on this product
