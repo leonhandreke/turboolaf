@@ -1,26 +1,47 @@
 #!/usr/bin/env python3
 
+import argparse
 import json
 import time
 import operator
 
 INVOICE_WIDTH = 60
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Preisolaf')
+    parser.add_argument('--all', dest='show_all', action='store_const',
+        const=True, default=False, help='Show all products')
+    parser.add_argument('--aliases', dest='show_aliases', action='store_const',
+        const=True, default=False, help='Show aliases of products')
+    args = parser.parse_args()
+    return args
+
+def show_aliases(product):
+    aliases = product.get('alias', [])
+    string = "\t{0}\n".format(code)
+    if len(aliases) > 0:
+        string += "\t{0}\n".format(','.join(aliases))
+    return string
+
 invoice = json.load(open("invoice_prototype.olaf"))
 
-invoice_string = ""
-invoice_string += "*" * INVOICE_WIDTH + "\n"
+invoice_string = "*" * INVOICE_WIDTH + "\n"
 invoice_string += "K1 Getränkeverkauf".center(INVOICE_WIDTH) + "\n"
 invoice_string += time.strftime("%d %b %Y %H:%M:%S").center(INVOICE_WIDTH) + "\n"
 invoice_string += ("Preisliste").center(INVOICE_WIDTH) + "\n"
 invoice_string += "*" * INVOICE_WIDTH + "\n\n"
 
 
-for code, product in invoice.items():
-   billing_string = str('%.2f' % product["price"]).rjust(5)
+args = parse_args()
 
-   name_string = product["name"].ljust(INVOICE_WIDTH - len(billing_string))
-   
-   invoice_string += name_string + billing_string + "\n"
+for code, product in invoice.items():
+    price = product.get('price', 0)
+    if price <= 0 and not args.show_all:
+        continue
+    billing_string = str('%.2f' % price).rjust(5)
+    name_string = product["name"].ljust(INVOICE_WIDTH - len(billing_string))
+    invoice_string += "{0} {1}\n".format(name_string, billing_string)
+    if args.show_aliases:
+        invoice_string += show_aliases(product)
 
 print(invoice_string)
