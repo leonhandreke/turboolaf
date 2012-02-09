@@ -1,123 +1,55 @@
 #!/usr/bin/env python3
 
 from decimal import Decimal
-import copy
-import datetime
+from invoice import Invoice
 import json
 import optparse
 import os
+import render
 import string
 import sys
 import time
 import uuid
-
-
-
-# Check that there is no product anymore that depends on this product
-def product_dependencies_resolvable(invoice, code):
-    for c, product in invoice.items():
-        for dep in product.get('dependencies', []):
-            if dep['id'] == code:
-                return False
-    return True
-
-def resolve_invoice_dependencies(invoice):
-    invoice = copy.deepcopy(invoice)
-    changes = 1
-    while changes > 0:
-        changes = 0
-        for code, product in invoice.items():
-            if not product_dependencies_resolvable(invoice, code):
-                continue
-            for dependency in product.get('dependencies', []):
-                changes += 1
-                invoice[dependency['id']]['quantity'] += product['quantity'] * dependency.get('quantity', 1)
-            invoice[code]["dependencies"] = []
-    return invoice
-
-def get_total_price(invoice):
-    invoice = resolve_invoice_dependencies(invoice)
-    total_price = Decimal(0)
-    for code, product in invoice.items():
-        billed_price = Decimal(str(product.get('price', 0))) * Decimal(str(product.get('quantity')))
-        total_price += billed_price
-    return total_price
-
-def get_qif(invoice):
-    qif = "!Type:Cash\n"
-    qif += "T" + str(get_total_price(invoice)) + "\n"
-    qif += "D" + time.strftime("%d") + "/" + time.strftime("%m") + "' " + time.strftime("%y") + "\n"
-    qif += "MBierminister Verkauf\n"
-    qif += "^"
-    return qif
-
-def get_invoice_ascii(invoice, width=60):
-    invoice_string = ""
-    invoice_string += "*" * width + "\n"
-    invoice_string += "K1 Getränkeverkauf".center(width) + "\n"
-    invoice_string += time.strftime("%d %b %Y %H:%M:%S").center(width) + "\n"
-    invoice_string += ("ID: " + invoice_id).center(width) + "\n"
-    invoice_string += "*" * width + "\n\n"
-
-    for code, product in invoice.items():
-        price = Decimal(str(product.get('price', 0)))
-        if product["quantity"] != 0 and price != 0:
-            billed_price = price * Decimal(str(product["quantity"]))
-            billing_string = str(price).rjust(5) + \
-                    str(" x " + str(product["quantity"])).rjust(6) + \
-                    " = " + \
-                    str(billed_price).rjust(6)
-
-            name_string = product["name"].ljust(width - len(billing_string))
-            invoice_string += name_string + billing_string + "\n"
-
-    invoice_string += "-" * width + "\n"
-    invoice_string += "Total:" + str(get_total_price(invoice)).rjust(width - 6) + "\n"
-
-    return invoice_string
-
-def get_entered_items_ascii(invoice):
-    entered_items_string = ""
-    for code, product in invoice.items():
-        if product["quantity"] != 0:
-            entered_items_string += str(product["quantity"]).rjust(4) + " x " + product["name"] + "\n"
-    entered_items_string += "Total: " + str(get_total_price(invoice))
-    return entered_items_string
-
-def get_product_code(invoice, code):
-    try:
-        invoice[code]
-        return code
-    except KeyError:
-        pass
-    for codename, product in invoice.items():
-        if code in product.get('alias', []):
-            return codename
-    return None
 
 # add a --file argument and parse the arguments
 parser = optparse.OptionParser()
 parser.add_option("-f", "--file", dest = "filename", help = "load invoice from SOURCE", metavar = "SOURCE")
 (options, args) = parser.parse_args()
 
-# load an invoice from file or, if no file was given, use the default invoice prototype
-if options.filename:
-    invoice = json.load(open(options.filename))
-else:
-    invoice = json.load(open("invoice_prototype.olaf"))
-
 print("Welcome to TurboOlaf!")
 
-#TODO: Maybe make this unique...?
-invoice_id = str(int(time.time()))
+# load an invoice from file or, if no file was given, use the default invoice prototype
+if options.filename:
+    invoice = Invoice(json.load(open(options.filename)))
+    print("Loaded invoice from " + options.filename)
+else:
+    invoice = Invoice(json.load(open("invoice_prototype.olaf")))
+    for product in invoice['items']:
+        product["quantity"] = 0
+    invoice['id'] = str(int(time.time()))
 
-# set the quantity of all products to 0
-#print(invoice)
-for code, product in invoice.items():
-    product["quantity"] = 0
+# records the order in which the products entered
+product_addition_order_list = []
+# remember the last added product that is impacted by the quantity command
+last_added_product = None
 
-previous_product_code = None
 while True:
+    # print a list of all scanned items
+    # order them by insertion, newest items first
+    unique_product_addition_order_list = []
+    for p in product_addition_order_list:
+        if not p in unique_product_addition_order_list:
+            unique_product_addition_order_list.append(p)
+    # also include items that may have been scanned in a previous run
+    for p in invoice['items']:
+        if not p in unique_product_addition_order_list:
+            unique_product_addition_order_list.append(p)
+    # print the list preceded by a line break
+    print();
+    print(render.product_list_as_string(unique_product_addition_order_list))
+    print("Total: " + str(invoice.get_total_price()))
+
+    # try to get input for a new product
     try:
         entered = input("olaf > ")
     except EOFError:
@@ -126,76 +58,68 @@ while True:
         print("\nCaught SIGINT, exiting...\n")
         sys.exit(1)
     # clear immediately and then show the input again
+    # this gives the impression that the input field always scrolls to the top
     os.system("clear")
     print("olaf > " + entered)
 
-    # end if an input was given
+    # end if no input was given
     if not entered:
         break
     else:
+        # check if the input is a Sonderposten
         if entered[0] == '$':
             # the input is a Sonderposten
             try:
-                special_product = {}
-                special_id = str(uuid.uuid4())
-                invoice[special_id]['quantity'] = 1
+                special_product = { 'ids': [str(uuid.uuid4())]}
+                special_product['quantity'] = 1
+                # try to extract a given name from the input
                 try:
-                    special_name = entered[1:].split(' ')[1]
+                    special_product['name'] = entered[1:].split(' ')[1]
                 except IndexError:
-                    special_name = "Sonderposten"
-                special_product['name'] = special_name
+                    special_product['name'] = "Sonderposten"
                 special_product['price'] = Decimal(entered[1:].split(' ')[0])
-                previous_product_code = special_id
                 # only if nothing of the above failed, write the above
-                invoice.update({
-                    special_id: special_product
-                    })
+                invoice['items'].append(special_product)
             except:
                 print("Invalid Sonderposten format!")
+        # else, if the input is not a Sonderposten
         else:
-            # the input is not a Sonderposten
-            if entered[0] in string.ascii_letters:
-                code = get_product_code(invoice, entered)
-                # the input starts with a letter and will be followed by a product id
-                if not code:
-                    print("Invalid product code " + entered[1:] + " entered")
+            # check if any of the entered characters are letters
+            if any(map(lambda l: l in string.ascii_letters, entered)):
+                # try to get a product with the given identifier
+                if not invoice.get_product(entered):
+                    print("Invalid product code " + entered + " entered")
                 else:
-                    previous_product_code = code
-                    print("Entered " + invoice[code]["name"])
-                    invoice[code]["quantity"] += 1
+                    invoice.get_product(entered)["quantity"] += 1
+                    product_addition_order_list.insert(0, invoice.get_product(entered))
+                    last_added_product = invoice.get_product(entered)
+                    print("Entered " + invoice.get_product(entered)["name"])
             else:
+                # check if the length of the input is long enough for a barcode
                 if len(entered) >= 8:
-                    # a code was scanned
-                    code = get_product_code(invoice, entered)
-                    # the input starts with a letter and will be followed by a product id
-                    if not code:
-                        print("Invalid product code " + entered[1:] + " entered")
+                    if not invoice.get_product(entered):
+                        print("Invalid product code " + entered + " entered")
                     else:
-                        previous_product_code = code
-                        print("Scanned " + invoice[code]["name"])
-                        invoice[code]["quantity"] += 1
+                        invoice.get_product(entered)["quantity"] += 1
+                        product_addition_order_list.insert(0, invoice.get_product(entered))
+                        last_added_product = invoice.get_product(entered)
+                        print("Scanned " + invoice.get_product(entered)["name"])
+                # a short number, i.e. a quantity was entered
                 else:
-                    # a quantity was entered
-                    if previous_product_code:
-                        try:
-                            invoice[previous_product_code]["quantity"] += int(entered) - 1
-                            print("Added another " + str(int(entered) - 1) + " " + invoice[previous_product_code]["name"])
-                            previous_product_code = None
-                        except ValueError:
-                            print("No valid quantity entered")
+                    if last_added_product:
+                        last_added_product["quantity"] += int(entered) - 1
+                        print("Added another " + str(int(entered) - 1) + " " + last_added_product["name"])
+                        # adding even more items might lead to a confusing workflow
+                        last_added_product = None
                     else:
                         print("No previous product entered!")
 
-        # finally, print a list of all scanned items
-        print(get_entered_items_ascii(invoice))
+print(render.invoice_as_printable_string(invoice.get_copy_with_resolved_dependencies()))
 
-print(get_invoice_ascii(resolve_invoice_dependencies(invoice)))
-
-# TODO: write this out in a sorted manner e.g. yyyy/mm/dd/id.olaf
-invoice_file = open("invoices/" + invoice_id + ".json", 'w')
+invoice_file = open("invoices/" + invoice['id'] + ".json", 'w')
 invoice_file.write(json.dumps(invoice, indent=4))
 invoice_file.close()
 
-qif_file = open("qif/" + invoice_id + ".qif", 'w')
-qif_file.write(get_qif(invoice))
+qif_file = open("qif/" + invoice['id'] + ".qif", 'w')
+qif_file.write(render.invoice_as_qif(invoice))
 qif_file.close()
