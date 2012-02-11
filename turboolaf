@@ -116,6 +116,12 @@ while True:
 
 print(render.invoice_as_printable_string(invoice.get_copy_with_resolved_dependencies()))
 
+# create data directories if they do not exist yet
+if not os.path.exists('invoices/'):
+    os.makedirs('invoices/')
+if not os.path.exists('qif/'):
+    os.makedirs('qif/')
+
 invoice_file = open("invoices/" + invoice['id'] + ".json", 'w')
 invoice_file.write(json.dumps(invoice, indent=4, ensure_ascii=False))
 invoice_file.close()
