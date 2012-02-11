@@ -1,6 +1,6 @@
 # TurboOlaf
 
-TurboOlaf is a simple and fast cutting-edge hardware-accelerated system for selling things labeled with barcodes. It was depeloped for selling beverages in crates at the the [HaDiKO](http://hadiko.de)(more specifically, the K1 Bar), but should work just as well in many other environments.
+TurboOlaf is a simple and fast cutting-edge hardware-accelerated system for selling things labeled with barcodes. It was depeloped for selling beverages in crates at the the [HaDiKO](http://hadiko.de) (more specifically, the K1 Bar), but should work just as well in many other environments.
 
 TurboOlaf features a simple text-based interface for scanning, an advanced product dependency resolution mechanism and built-in generation of invoices and QIF files that can easily be imported into [GnuCash](http://gnucash.org). All that in little more than 200 lines of Python 3 code!
 
