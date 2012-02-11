@@ -13,7 +13,7 @@ def invoice_as_printable_string(invoice, width=60):
     invoice_string += ("ID: " + invoice['id']).center(width) + "\n"
     invoice_string += "*" * width + "\n\n"
 
-    for product in invoice['items']:
+    for product in invoice['products']:
         price = Decimal(str(product.get('price', 0)))
         # only print products that actually cost money
         if product["quantity"] != 0 and price != 0:
@@ -35,11 +35,11 @@ def product_list_as_string(product_list):
     """
     Render a string with a list containing the quantity and name of the products in the list
     """
-    entered_items_string = ""
+    entered_products_string = ""
     for product in product_list:
         if product["quantity"] != 0:
-            entered_items_string += str(product["quantity"]).rjust(4) + " x " + product["name"] + "\n"
-    return entered_items_string
+            entered_products_string += str(product["quantity"]).rjust(4) + " x " + product["name"] + "\n"
+    return entered_products_string
 
 def invoice_as_qif(invoice):
     """

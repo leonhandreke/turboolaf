@@ -24,7 +24,7 @@ if options.filename:
     print("Loaded invoice from " + options.filename)
 else:
     invoice = Invoice(json.load(open("invoice_prototype.olaf")))
-    for product in invoice['items']:
+    for product in invoice['products']:
         product["quantity"] = 0
     invoice['id'] = str(int(time.time()))
 
@@ -34,14 +34,14 @@ product_addition_order_list = []
 last_added_product = None
 
 while True:
-    # print a list of all scanned items
-    # order them by insertion, newest items first
+    # print a list of all scanned products
+    # order them by insertion, newest product first
     unique_product_addition_order_list = []
     for p in product_addition_order_list:
         if not p in unique_product_addition_order_list:
             unique_product_addition_order_list.append(p)
-    # also include items that may have been scanned in a previous run
-    for p in invoice['items']:
+    # also include products that may have been scanned in a previous run
+    for p in invoice['products']:
         if not p in unique_product_addition_order_list:
             unique_product_addition_order_list.append(p)
     # print the list preceded by a line break
@@ -79,7 +79,7 @@ while True:
                     special_product['name'] = "Sonderposten"
                 special_product['price'] = Decimal(entered[1:].split(' ')[0])
                 # only if nothing of the above failed, write the above
-                invoice['items'].append(special_product)
+                invoice['products'].append(special_product)
             except:
                 print("Invalid Sonderposten format!")
         # else, if the input is not a Sonderposten
@@ -109,7 +109,7 @@ while True:
                     if last_added_product:
                         last_added_product["quantity"] += int(entered) - 1
                         print("Added another " + str(int(entered) - 1) + " " + last_added_product["name"])
-                        # adding even more items might lead to a confusing workflow
+                        # adding even more products might lead to a confusing workflow
                         last_added_product = None
                     else:
                         print("No previous product entered!")
