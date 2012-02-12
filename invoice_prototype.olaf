@@ -108,7 +108,7 @@
                     "id": "kasten_sprudel"
                 }
             ], 
-            "name": "Wiesentahler Zitronenlimonade (12x0,7l))", 
+            "name": "Wiesentaler Zitronenlimonade (12x0,7l))", 
             "ids": [
                 "zitrolimo", 
                 "zitronenlimo", 
@@ -188,7 +188,7 @@
                     "id": "kasten_sprudel"
                 }
             ], 
-            "name": "Wiesentahler Sprudel(grün) (12x0,7l))", 
+            "name": "Wiesentaler Sprudel(grün) (12x0,7l))", 
             "ids": [
                 "sprudelgruen", 
                 "4035903002093", 
@@ -215,7 +215,7 @@
                     "id": "kasten_sprudel"
                 }
             ], 
-            "name": "Wiesentahler ColaMix (12x0,7l))", 
+            "name": "Wiesentaler ColaMix (12x0,7l))", 
             "ids": [
                 "colamix", 
                 "4035903013099"
@@ -380,7 +380,7 @@
                     "id": "kasten_sprudel"
                 }
             ], 
-            "name": "Wiesentahler Orangenlimonade (12x0,7l))", 
+            "name": "Wiesentaler Orangenlimonade (12x0,7l))", 
             "ids": [
                 "olimo", 
                 "orangelimo", 
@@ -436,7 +436,7 @@
                     "id": "kasten_sprudel"
                 }
             ], 
-            "name": "Wiesentahler Apfelschorle (12x0,7l))", 
+            "name": "Wiesentaler Apfelschorle (12x0,7l))", 
             "ids": [
                 "aschorle", 
                 "apfelschorle", 
@@ -535,7 +535,7 @@
                     "id": "kasten_sprudel"
                 }
             ], 
-            "name": "Wiesentahler Grapefruidlimo (12x0,7l))", 
+            "name": "Wiesentaler Grapefruidlimo (12x0,7l))", 
             "ids": [
                 "grapelimo", 
                 "grapefruitlimo", 
@@ -606,7 +606,7 @@
                     "id": "kasten_sprudel"
                 }
             ], 
-            "name": "Wiesentahler Sprudel(blau) (12x0,7l))", 
+            "name": "Wiesentaler Sprudel(blau) (12x0,7l))", 
             "ids": [
                 "sprudelblau", 
                 "4035903001096"
