@@ -22,7 +22,20 @@
             "name": "Sprudelflasche 0,7l", 
             "ids": [
                 "sprudelflasche", 
+                "fsp", 
                 "flasche_sprudel"
+            ]
+        }, 
+        {
+            "dependencies": [
+                {
+                    "id": "flasche_sprudel", 
+                    "quantity": -1
+                }
+            ], 
+            "name": "Pfandrückgabe Sprudelflasche 0,7l", 
+            "ids": [
+                "25200102"
             ]
         }, 
         {
@@ -48,6 +61,18 @@
                 "fb03", 
                 "bierflasche", 
                 "flasche_bier"
+            ]
+        }, 
+        {
+            "dependencies": [
+                {
+                    "id": "flasche_bier", 
+                    "quantity": -1
+                }
+            ], 
+            "name": "Pfandrückgabe Bierflasche", 
+            "ids": [
+                "25200058"
             ]
         }, 
         {
@@ -102,6 +127,7 @@
             "ids": [
                 "pfandbierkasten20", 
                 "p20", 
+                "25200027", 
                 "kasten_bier_mit_20_05_pfandrueckgabe"
             ]
         }, 
@@ -139,7 +165,20 @@
             "name": "Colaflasche", 
             "ids": [
                 "colaflasche", 
-                "flasche_cola"
+                "flasche_cola", 
+                "fc"
+            ]
+        }, 
+        {
+            "dependencies": [
+                {
+                    "id": "flasche_cola", 
+                    "quantity": -1
+                }
+            ], 
+            "name": "Pfandrückgabe Colaflasche", 
+            "ids": [
+                "25200089"
             ]
         }, 
         {
@@ -262,6 +301,7 @@
             "ids": [
                 "pfandbierkasten24", 
                 "p24", 
+                "25200010", 
                 "kasten_bier_mit_24_03_pfandrueckgabe"
             ]
         }, 
@@ -276,6 +316,7 @@
             "ids": [
                 "pfandsaftkasten", 
                 "psa", 
+                "25200119", 
                 "kasten_saft_pfandrueckgabe"
             ]
         }, 
@@ -328,6 +369,7 @@
             "ids": [
                 "pfandcola12", 
                 "pc12", 
+                "25200065", 
                 "kasten_cola_12_10_pfandrueckgabe"
             ]
         }, 
@@ -581,6 +623,7 @@
             "ids": [
                 "pfandsprudelkasten", 
                 "psp", 
+                "25200096", 
                 "kasten_sprudel_pfandrueckgabe"
             ]
         }, 
@@ -595,6 +638,7 @@
             "ids": [
                 "pfandcola10", 
                 "pc10", 
+                "25200072", 
                 "kasten_cola_10_15_pfandrueckgabe"
             ]
         }, 
@@ -603,7 +647,20 @@
             "name": "Saftflasche 1l", 
             "ids": [
                 "saftflasche", 
+                "fsa", 
                 "flasche_saft"
+            ]
+        }, 
+        {
+            "dependencies": [
+                {
+                    "id": "flasche_saft", 
+                    "quantity": -1
+                }
+            ], 
+            "name": "Pfandrückgabe Saftflasche 1l", 
+            "ids": [
+                "25200126"
             ]
         }, 
         {
