@@ -19,7 +19,7 @@ When quitting, TurboOlaf prints a string representation of the final invoice to 
 
 TurboOlaf uses a simple JSON configuration file format. Actually, all invoices that TurboOlaf generates are clones of the original `invoice_prototype.olaf` file. This means that old invoices are always readable and editable, regardless of the current set of products configured in `invoice_prototype.olaf`.
 
-Internally, TurboOlaf uses a dependencies to subdivide products into smaller "building blocks". Consider for example a crate of beer. This product can be subdivided into the actual liquid that is sold and the plastic crate with 24 glass bottles. This full crate can be divided into 24 single glass bottles and the plastic crate. The advantage of subdividing these products is that a meta-product for returning deposits can easily be created by creating a "Crate of Beer Deposit" product that costs nothing but dependes on "-1 times" the plastic crate with 24 glass bottles.
+Internally, TurboOlaf uses a dependency model to subdivide products into smaller "building blocks". Consider for example a crate of beer. This product can be subdivided into the actual liquid that is sold and the plastic crate with 24 glass bottles. This full crate can be divided into 24 single glass bottles and the plastic crate. The advantage of subdividing these products is that a meta-product for returning deposits can easily be created by creating a "Crate of Beer Deposit" product that costs nothing but dependes on "-1 times" the plastic crate with 24 glass bottles.
 
 A product has the following attributes:
 
